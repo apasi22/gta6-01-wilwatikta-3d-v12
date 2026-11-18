@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WILWATIKTA 3D — Cerita Jalanan · 1998</title>
+<link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+<noscript><p style="color:#fff;font-family:sans-serif;padding:20px">Wilwatikta 3D needs JavaScript and WebGL. Please enable JavaScript and reload.</p></noscript>
+<canvas id="gl"></canvas>
+
+<div id="hud">
+  <div id="minimapWrap">
+    <canvas id="minimap" width="150" height="150"></canvas>
+    <div id="districtPill">KAMPUNG BATIK</div>
+    <div id="streetText">Jl. Kampung Batik</div>
+    <div id="respectBar"><span class="rep-plus">+</span><div class="rep-track"><div id="respectFill"></div></div></div>
+    <div id="respectText">REP FIXER · 1320 · LV 4</div>
+  </div>
+
+  <div id="missionPanel">
+    <div class="mp-kicker">STORY MISSION</div>
+    <div id="missionTitle">MISSION 6/12 — BALAPAN SENJA</div>
+    <div id="missionBrief">Checkpoint 1 of 4: Pantai Kidul</div>
+    <div class="mp-row"><span id="missionTimer">◷ 3:14</span><span id="missionDist">▲ 179m</span></div>
+    <div class="mp-track"><div id="missionBarFill"></div></div>
+    <div id="missionNext">NEXT: GUDANG SEGARA</div>
+    <div id="wpdLine">WPD DISPATCH: 2 unit mengejar · HELI 2 SPOTLIGHT</div>
+    <div class="hbar"><span>HEALTH</span><div class="hbar-track"><div id="healthFill"></div></div></div>
+  </div>
+
+  <div id="topCenter">
+    <div id="statusStrip"><span id="moneyText">$12,480</span><span id="starsText">★★★☆☆</span><span id="clockText">18:37 · DAY 1</span><span class="year">1998</span></div>
+    <div id="weaponRow"></div>
+    <div id="weaponName">SMG TAWON · 32/160 ROUNDS</div>
+  </div>
+
+  <div id="topRight">
+    <div id="radioBox" class="rbox">
+      <div class="radio-head"><span id="radioStation">♪ GAMELAN FM 101.1</span><span class="eq"><i></i><i></i><i></i><i></i></span></div>
+      <div id="radioSong">Bonang Malam — Gamelan Wilwatikta</div>
+    </div>
+    <div id="vehicleBox" class="rbox">
+      <div id="vehName">GARUDA GT</div>
+      <div class="veh-cond"><span id="vehCondLabel">CONDITION</span><div class="veh-track"><div id="vehCondFill"></div></div><span id="vehCondPct">100%</span></div>
+      <div class="veh-speed"><span id="vehSpeed">58</span><span class="unit">KM/H</span><span id="vehGear">G2</span></div>
+      <div class="veh-segs"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+
+  <div id="crewStrip"></div>
+
+  <div id="dialogue">
+    <div id="dlgPortrait"></div>
+    <div class="dlg-body"><div><span id="dlgName">BAMBANG</span> <span id="dlgRole">MECHANIC</span></div><div id="dlgText"></div></div>
+  </div>
+
+  <div id="comboText"></div>
+  <div id="floaters"></div>
+  <div id="toast"></div>
+</div>
+
+<div id="titleScreen" class="show">
+  <div class="title-block">
+    <h1>WILWATIKTA</h1>
+    <div class="subtitle">CERITA JALANAN &middot; 1998</div>
+    <div class="quote">&ldquo;Setiap jalan punya harga. Setiap pelarian punya cerita.&rdquo;</div>
+  </div>
+  <div class="title-btns">
+    <button id="btnMulai" class="tbtn primary">▶&nbsp; MULAI</button>
+    <button id="btnSave" class="tbtn">💾&nbsp; SAVE</button>
+    <button id="btnLoad" class="tbtn">📂&nbsp; LOAD</button>
+    <button id="btnEnd" class="tbtn">⏻&nbsp; END GAME</button>
+  </div>
+  <div class="title-foot">WILWATIKTA 3D &middot; KOTA WILWATIKTA &middot; 1998<br>KARYA ORISINAL &middot; DIBUAT UNTUK MAKE.FUN</div>
+  <div class="title-controls">WASD GERAK &middot; MOUSE KAMERA &middot; E MASUK MOBIL &middot; KLIK TEMBAK &middot; Q GANTI SENJATA &middot; M PETA &middot; R RADIO</div>
+</div>
+
+<div id="mapScreen">
+  <div class="map-col left">
+    <h3>📜 STORY MISSIONS</h3>
+    <div class="map-sub"><span>STORY</span><span>5 / 12 jobs</span></div>
+    <div id="mapMissions"></div>
+    <div class="map-job">
+      <div class="map-job-kicker">CURRENT JOB</div>
+      <div id="mapJob">Balapan Senja</div>
+      <div id="mapJobStage">Checkpoint 1 of 4: Pantai Kidul</div>
+      <div class="map-job-row"><span>STAGE 1/4</span><span id="mapJobDist">GPS 179 m</span></div>
+      <div class="map-hint">M = TUTUP PETA · KLIK IKON UNTUK GPS</div>
+    </div>
+  </div>
+  <div class="map-col center">
+    <h3>🗺️ PETA WILWATIKTA — GPS AKTIF</h3>
+    <div class="map-axes"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span></div>
+    <div id="mapWrap">
+      <div class="map-sea">LAUT JAWA</div>
+      <div id="mapGrid"></div>
+      <div class="map-rows"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
+    </div>
+  </div>
+  <div class="map-col right">
+    <h3>📊 STATS</h3>
+    <div class="stat"><span>STORY</span><b id="statStory">42%</b></div>
+    <div class="stat"><span>REP</span><b id="statRep">FIXER · 1320</b></div>
+    <div class="stat"><span>CASH</span><b id="statCash">$12,480</b></div>
+    <div class="stat"><span>TIME</span><b id="statTime">18:37 · DAY 1</b></div>
+    <div class="stat"><span>WANTED</span><b id="statWanted">★★★☆☆</b></div>
+    <div class="stat"><span>TAKEDOWNS</span><b id="statTakedowns">14</b></div>
+    <div class="stat"><span>CARS STOLEN</span><b id="statCars">6</b></div>
+    <div class="stat"><span>STUNTS</span><b id="statStunts">$2,150</b></div>
+    <div class="ring-wrap">
+      <svg width="110" height="110" viewBox="0 0 110 110">
+        <circle cx="55" cy="55" r="34" fill="none" stroke="#333a48" stroke-width="10"/>
+        <circle id="ringFill" cx="55" cy="55" r="34" fill="none" stroke="#ffd23d" stroke-width="10" stroke-linecap="round" transform="rotate(-90 55 55)"/>
+      </svg>
+      <div id="ringPct">42%</div>
+    </div>
+    <h3 class="legend-h">LEGENDA</h3>
+    <div class="legend"><i style="background:#ffd23d"></i>Objective / Checkpoint</div>
+    <div class="legend"><i style="background:#3a7ae0"></i>WPD / Polisi</div>
+    <div class="legend"><i style="background:#e05a4e"></i>Musuh / Gang</div>
+    <div class="legend"><i style="background:#3fae6a"></i>Safehouse / Garage</div>
+    <div class="legend"><i style="background:#e07a3c"></i>Crew / Kontak</div>
+    <div class="map-btns"><button id="btnMapClose">TUTUP [M]</button><button id="btnMapTitle">TITLE</button></div>
+  </div>
+</div>
+
+<div id="pauseScreen">
+  <div class="pause-panel">
+    <h2>JEDA</h2>
+    <p>WILWATIKTA 3D — permainan dijeda.</p>
+    <button id="btnResume" class="tbtn primary">▶&nbsp; LANJUT</button>
+    <button id="btnPauseSave" class="tbtn">💾&nbsp; SAVE</button>
+    <button id="btnPauseHelp" class="tbtn">❓&nbsp; KONTROL</button>
+    <button id="btnPauseTitle" class="tbtn">⏻&nbsp; TITLE</button>
+  </div>
+</div>
+
+<script src="src/config.js"></script>
+<script src="src/random.js"></script>
+<script src="src/textures.js"></script>
+<script src="src/mesh.js"></script>
+<script src="src/city.js"></script>
+<script src="src/render.js"></script>
+<script src="src/input.js"></script>
+<script src="src/audio.js"></script>
+<script src="src/player.js"></script>
+<script src="src/traffic.js"></script>
+<script src="src/police.js"></script>
+<script src="src/missions.js"></script>
+<script src="src/hud.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>
